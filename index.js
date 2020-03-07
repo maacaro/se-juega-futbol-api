@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
@@ -13,4 +12,5 @@ app.get("/", (request, response) => {
 
 app.listen(port, () => {
   console.log(`App running on port ${port}`);
+  console.log("Database", database);
 });
