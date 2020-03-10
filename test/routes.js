@@ -5,6 +5,7 @@ let chaiHttp = require("chai-http");
 const expect = require("chai").expect;
 const Pool = require("pg").Pool;
 var jwt = require("jsonwebtoken");
+var bcrypt = require("bcryptjs");
 let server = require("../server");
 
 const { user, host, database, password, port, secret } = require("../config");
@@ -59,5 +60,23 @@ describe("/user Post Request", () => {
     expect(response.body).to.have.property("auth");
     expect(response.body).to.have.property("token");
     expect(response.body.token).to.equal(expectedToken);
+  });
+  it("save a hashed password", async () => {
+    const response = await chai
+      .request(server)
+      .post("/user")
+      .send({
+        email: "me@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123",
+        confirmPassword: "123"
+      });
+
+    const results = await pool.query("SELECT password from users");
+    var passwordIsHashed = bcrypt.compareSync("123", results.rows[0].password);
+
+    expect(response).to.have.status(201);
+    expect(passwordIsHashed).to.equal(true);
   });
 });
