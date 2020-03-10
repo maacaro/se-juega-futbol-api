@@ -1,7 +1,8 @@
 require("dotenv").config();
 const { user, host, database, password, port } = getDatabaseConectionData();
+const secret = process.env.secret;
 
-module.exports = { user, host, database, password, port };
+module.exports = { user, host, database, password, port, secret };
 
 function getDatabaseConectionData() {
   if (process.env.NODE_ENV === "test") {

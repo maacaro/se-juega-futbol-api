@@ -28,9 +28,11 @@ function createUser({ name, email, lastName, password }) {
   }
   return pool
     .query(
-      "INSERT INTO users (name,email,last_name,password) VALUES($1,$2,$3,$4)",
+      "INSERT INTO users (name,email,last_name,password) VALUES($1,$2,$3,$4) RETURNING user_id",
       [name, email, lastName, password]
     )
-    .then(results => results.rowCount)
+    .then(results => {
+      return results;
+    })
     .catch(error => error);
 }

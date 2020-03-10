@@ -15,9 +15,10 @@ const pool = new Pool({
 });
 
 describe("createUser", () => {
-  after(async function() {
+  before(async function() {
     try {
       await pool.query("TRUNCATE TABLE users CASCADE");
+      await pool.query("ALTER SEQUENCE users_user_id_seq RESTART WITH 1");
       await pool.end();
       console.log("DATABASE clean");
     } catch (error) {
@@ -58,7 +59,7 @@ describe("createUser", () => {
       "password should have a value"
     );
   });
-  it("should return the number of rows afected", async () => {
+  it("should return the user_id", async () => {
     const user = {
       name: "Manuel",
       email: "me@sejuegafutbol.com",
@@ -66,6 +67,6 @@ describe("createUser", () => {
       password: "encryptedpassword"
     };
     const results = await createUser(user);
-    expect(results).to.equal(1);
+    expect(results.rows[0].user_id).to.equal(1);
   });
 });
