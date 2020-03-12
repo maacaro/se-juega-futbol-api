@@ -1,5 +1,5 @@
 const Pool = require("pg").Pool;
-const { user, host, database, password, port } = require("./config");
+const { user, host, database, password, port } = require("../../config");
 
 module.exports = {
   createUser

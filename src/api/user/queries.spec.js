@@ -1,8 +1,8 @@
-const { createUser } = require("../queries");
+const { createUser } = require("./queries");
 const expect = require("chai").expect;
 const Pool = require("pg").Pool;
 
-const { user, host, database, password, port } = require("../config");
+const { user, host, database, password, port } = require("../../config");
 
 const pool = new Pool({
   user,
@@ -20,7 +20,6 @@ describe("createUser", () => {
       await pool.query("TRUNCATE TABLE users CASCADE");
       await pool.query("ALTER SEQUENCE users_user_id_seq RESTART WITH 1");
       await pool.end();
-      console.log("DATABASE clean");
     } catch (error) {
       console.log(error);
     }
