@@ -2,7 +2,8 @@ const Pool = require("pg").Pool;
 const { user, host, database, password, port } = require("../../config");
 
 module.exports = {
-  createUser
+  createUser,
+  findUserByEmail
 };
 
 const pool = new Pool({
@@ -33,6 +34,24 @@ function createUser({ name, email, lastName, password }) {
     )
     .then(results => {
       return results;
+    })
+    .catch(error => error);
+}
+
+function findUserByEmail(email) {
+  if (!email === true) {
+    throw new Error(`email should have a value ${email}`);
+  }
+  return pool
+    .query(`SELECT user_id, password FROM users where email ='${email}'`)
+    .then(results => {
+      if (results.rows.length <= 0) {
+        return null;
+      }
+      return {
+        userID: results.rows[0].user_id,
+        password: results.rows[0].password
+      };
     })
     .catch(error => error);
 }

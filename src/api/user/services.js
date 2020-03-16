@@ -1,11 +1,12 @@
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 
-const { createUser } = require("./queries");
+const { createUser, findUserByEmail } = require("./queries");
 const { secret } = require("../../config");
 
 module.exports = {
-  registerUSer
+  registerUSer,
+  login
 };
 
 async function registerUSer({ email, name, lastName, password }) {
@@ -27,4 +28,24 @@ async function registerUSer({ email, name, lastName, password }) {
   } catch (error) {
     throw error;
   }
+}
+
+async function login({ email, password }) {
+  const result = await findUserByEmail(email);
+  if (!result) {
+    return { status: 404, message: "User not Found" };
+  }
+
+  const { userID, password: passwordSaved } = result;
+  const passwordIsValid = bcrypt.compareSync(password, passwordSaved);
+
+  if (passwordIsValid === false) {
+    return { auth: false, token: null };
+  }
+
+  const token = jwt.sign({ id: userID }, secret, {
+    expiresIn: 86400
+  });
+
+  return { auth: true, token };
 }

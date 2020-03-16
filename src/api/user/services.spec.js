@@ -5,7 +5,7 @@ const Pool = require("pg").Pool;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
-const { registerUSer } = require("./services");
+const { registerUSer, login } = require("./services");
 
 const {
   user,
@@ -59,5 +59,87 @@ describe("Service registerUser", () => {
     });
     const expectedToken = jwt.sign({ id: 1 }, secret, { expiresIn: 86400 });
     expect(response).to.have.property("token");
+    expect(response.token).to.equal(expectedToken);
+  });
+});
+describe("SERVICE Login", () => {
+  beforeEach(async function() {
+    try {
+      await pool.query("TRUNCATE TABLE users CASCADE");
+      await pool.query("ALTER SEQUENCE users_user_id_seq RESTART WITH 1");
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  it("return a message of user not found", async () => {
+    const email = "me@sejuegafutbol.com";
+    const password = "123";
+
+    const serviceResponse = await login({ email, password });
+
+    expect(JSON.stringify(serviceResponse)).to.equal(
+      JSON.stringify({
+        status: 404,
+        message: "User not Found"
+      })
+    );
+  });
+  it("faild auth with no valid password", async () => {
+    const email = "me@sejuegafutbol.com";
+    const password = "321";
+    await registerUSer({
+      email,
+      name: "Manuel",
+      lastName: "Castro",
+      password: "123",
+      confirmPassword: "123"
+    });
+
+    const loginResponse = await login({ email, password });
+    //const token = jwt.sign({ id: 1 }, secret, { expiresIn: 86400 });
+    expect(JSON.stringify(loginResponse)).to.equal(
+      JSON.stringify({ auth: false, token: null })
+    );
+  });
+  it("faild auth with no valid email passsword combination", async () => {
+    const email = "me@sejuegafutbol.com";
+    const password = "987";
+    await registerUSer({
+      email,
+      name: "Manuel",
+      lastName: "Castro",
+      password: "123",
+      confirmPassword: "123"
+    });
+
+    await registerUSer({
+      email: "another@sejuegafutbol.com",
+      name: "Manuel",
+      lastName: "Castro",
+      password,
+      confirmPassword: password
+    });
+
+    const loginResponse = await login({ email, password });
+    expect(JSON.stringify(loginResponse)).to.equal(
+      JSON.stringify({ auth: false, token: null })
+    );
+  });
+  it("return a valid token a trully auth flag ", async () => {
+    const email = "me@sejuegafutbol.com";
+    const password = "123";
+    await registerUSer({
+      email,
+      name: "Manuel",
+      lastName: "Castro",
+      password: "123",
+      confirmPassword: "123"
+    });
+
+    const loginResponse = await login({ email, password });
+    const token = jwt.sign({ id: 1 }, secret, { expiresIn: 86400 });
+    expect(JSON.stringify(loginResponse)).to.equal(
+      JSON.stringify({ auth: true, token })
+    );
   });
 });
