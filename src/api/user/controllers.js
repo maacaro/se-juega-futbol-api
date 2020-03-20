@@ -31,6 +31,7 @@ async function loginUser(req, res) {
     if (auth === false) {
       return res.status(401).send({ auth, token });
     }
+    return res.status(200).send({ auth, token });
   } catch (error) {
     return res.status(500).send(error);
   }

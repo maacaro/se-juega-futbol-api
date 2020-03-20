@@ -59,7 +59,7 @@ describe("Controler /api/user Post Request", () => {
   });
 });
 
-describe("Controller POSt REQUEST /api/login", () => {
+describe("Controller POST REQUEST /api/login", () => {
   afterEach(async function() {
     try {
       await pool.query("TRUNCATE TABLE users CASCADE");
@@ -114,5 +114,53 @@ describe("Controller POSt REQUEST /api/login", () => {
 
     expect(responseRegisterUser).to.have.status(201);
     expect(responseLogin).to.have.status(401);
+  });
+  it("response 200 when the user and password are valid'", async () => {
+    const responseRegisterUser = await chai
+      .request(server)
+      .post("/api/user")
+      .send({
+        email: "me@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123",
+        confirmPassword: "123"
+      });
+
+    const responseLogin = await chai
+      .request(server)
+      .post("/api/login")
+      .send({
+        email: "me@sejuegafutbol.com",
+        password: "123"
+      });
+
+    expect(responseRegisterUser).to.have.status(201);
+    expect(responseLogin).to.have.status(200);
+  });
+  it("response with a not null token", async () => {
+    const responseRegisterUser = await chai
+      .request(server)
+      .post("/api/user")
+      .send({
+        email: "me@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123",
+        confirmPassword: "123"
+      });
+
+    const {
+      body: { token }
+    } = await chai
+      .request(server)
+      .post("/api/login")
+      .send({
+        email: "me@sejuegafutbol.com",
+        password: "123"
+      });
+
+    expect(responseRegisterUser).to.have.status(201);
+    expect(token).to.not.equal(null);
   });
 });

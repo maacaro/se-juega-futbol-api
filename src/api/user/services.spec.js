@@ -57,7 +57,9 @@ describe("Service registerUser", () => {
       password: "123",
       confirmPassword: "123"
     });
+
     const expectedToken = jwt.sign({ id: 1 }, secret, { expiresIn: 86400 });
+
     expect(response).to.have.property("token");
     expect(response.token).to.equal(expectedToken);
   });
@@ -137,8 +139,6 @@ describe("SERVICE Login", () => {
 
     const loginResponse = await login({ email, password });
     const token = jwt.sign({ id: 1 }, secret, { expiresIn: 86400 });
-    expect(JSON.stringify(loginResponse)).to.equal(
-      JSON.stringify({ auth: true, token })
-    );
+    expect(loginResponse).to.deep.equal({ auth: true, token });
   });
 });
