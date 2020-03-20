@@ -92,4 +92,27 @@ describe("Controller POSt REQUEST /api/login", () => {
 
     expect(message).to.equal("User Not Found");
   });
+  it("response 401 when the user and password combination is not valid'", async () => {
+    const responseRegisterUser = await chai
+      .request(server)
+      .post("/api/user")
+      .send({
+        email: "me@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123",
+        confirmPassword: "123"
+      });
+
+    const responseLogin = await chai
+      .request(server)
+      .post("/api/login")
+      .send({
+        email: "me@sejuegafutbol.com",
+        password: "987"
+      });
+
+    expect(responseRegisterUser).to.have.status(201);
+    expect(responseLogin).to.have.status(401);
+  });
 });

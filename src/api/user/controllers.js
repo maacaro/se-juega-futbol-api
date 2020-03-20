@@ -24,8 +24,13 @@ async function loginUser(req, res) {
     body: { email, password }
   } = req;
   try {
-    const { status, message } = await login({ email, password });
-    return res.status(status).send({ message });
+    const { status, message, auth, token } = await login({ email, password });
+    if (status === 404) {
+      return res.status(status).send({ message });
+    }
+    if (auth === false) {
+      return res.status(401).send({ auth, token });
+    }
   } catch (error) {
     return res.status(500).send(error);
   }
