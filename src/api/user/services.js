@@ -33,7 +33,7 @@ async function registerUSer({ email, name, lastName, password }) {
 async function login({ email, password }) {
   const result = await findUserByEmail(email);
   if (!result) {
-    return { status: 404, message: "User not Found" };
+    return { status: 404, message: "User Not Found" };
   }
 
   const { userID, password: passwordSaved } = result;

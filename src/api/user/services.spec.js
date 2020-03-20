@@ -80,7 +80,7 @@ describe("SERVICE Login", () => {
     expect(JSON.stringify(serviceResponse)).to.equal(
       JSON.stringify({
         status: 404,
-        message: "User not Found"
+        message: "User Not Found"
       })
     );
   });
@@ -96,7 +96,6 @@ describe("SERVICE Login", () => {
     });
 
     const loginResponse = await login({ email, password });
-    //const token = jwt.sign({ id: 1 }, secret, { expiresIn: 86400 });
     expect(JSON.stringify(loginResponse)).to.equal(
       JSON.stringify({ auth: false, token: null })
     );

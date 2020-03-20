@@ -58,3 +58,38 @@ describe("Controler /api/user Post Request", () => {
     expect(response.body).to.have.property("token");
   });
 });
+
+describe("Controller POSt REQUEST /api/login", () => {
+  afterEach(async function() {
+    try {
+      await pool.query("TRUNCATE TABLE users CASCADE");
+      await pool.query("ALTER SEQUENCE users_user_id_seq RESTART WITH 1");
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  it("response 404 when user is not Found", async () => {
+    const { status } = await chai
+      .request(server)
+      .post("/api/login")
+      .send({
+        email: "me@sejuegafutbol.com",
+        password: "123"
+      });
+
+    expect(status).to.equal(404);
+  });
+  it("response 'User Not Found' when the user doesn't exits", async () => {
+    const {
+      body: { message }
+    } = await chai
+      .request(server)
+      .post("/api/login")
+      .send({
+        email: "me@sejuegafutbol.com",
+        password: "123"
+      });
+
+    expect(message).to.equal("User Not Found");
+  });
+});
