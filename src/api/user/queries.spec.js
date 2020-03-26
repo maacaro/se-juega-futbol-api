@@ -2,16 +2,10 @@ const { createUser, findUserByEmail } = require("./queries");
 const expect = require("chai").expect;
 const Pool = require("pg").Pool;
 
-const { user, host, database, password, port } = require("../../config");
+const { connectionString } = require("../../config");
 
 const pool = new Pool({
-  user,
-  host,
-  database,
-  password,
-  port,
-  min: 1,
-  max: 1
+  connectionString: connectionString
 });
 
 describe(" DATABASE/MODEL createUser", () => {
@@ -20,7 +14,7 @@ describe(" DATABASE/MODEL createUser", () => {
       await pool.query("TRUNCATE TABLE users CASCADE");
       await pool.query("ALTER SEQUENCE users_user_id_seq RESTART WITH 1");
     } catch (error) {
-      console.log(error);
+      console.log("clean error:", error);
     }
   });
   it("should return an error when Name is missing", async () => {

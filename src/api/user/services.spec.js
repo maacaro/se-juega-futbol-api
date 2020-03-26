@@ -7,23 +7,10 @@ var bcrypt = require("bcryptjs");
 
 const { registerUSer, login } = require("./services");
 
-const {
-  user,
-  host,
-  database,
-  password,
-  port,
-  secret
-} = require("../../config");
+const { connectionString, secret } = require("../../config");
 
 const pool = new Pool({
-  user,
-  host,
-  database,
-  password,
-  port,
-  min: 1,
-  max: 1
+  connectionString: connectionString
 });
 
 describe("Service registerUser", () => {
