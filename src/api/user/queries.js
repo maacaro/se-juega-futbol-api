@@ -1,5 +1,5 @@
 const Pool = require("pg").Pool;
-const { user, host, database, password, port } = require("../../config");
+const { connectionString } = require("../../config");
 
 module.exports = {
   createUser,
@@ -7,11 +7,7 @@ module.exports = {
 };
 
 const pool = new Pool({
-  user,
-  host,
-  database,
-  password,
-  port
+  connectionString: connectionString
 });
 
 function createUser({ name, email, lastName, password }) {

@@ -6,16 +6,10 @@ const expect = require("chai").expect;
 const Pool = require("pg").Pool;
 let server = require("../../server");
 
-const { user, host, database, password, port } = require("../../config");
+const { connectionString } = require("../../config");
 
 const pool = new Pool({
-  user,
-  host,
-  database,
-  password,
-  port,
-  min: 1,
-  max: 1
+  connectionString: connectionString
 });
 
 chai.use(chaiHttp);
