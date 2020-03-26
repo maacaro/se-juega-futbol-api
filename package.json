@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha **/*.spec.js --exit"
+    "test": "NODE_ENV=test mocha **/*.spec.js --exit",
+    "start": "node ./src/server.js"
   },
   "keywords": [],
   "author": "",
