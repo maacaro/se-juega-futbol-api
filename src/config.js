@@ -7,7 +7,7 @@ module.exports = { connectionString, secret };
 function getDatabaseConectionData() {
   if (process.env.NODE_ENV === "test") {
     return {
-      connectionString: process.env.TEST_DATABASE_URL
+      connectionString: process.env.HEROKU_POSTGRESQL_COPPER_URL
     };
   }
   return {
