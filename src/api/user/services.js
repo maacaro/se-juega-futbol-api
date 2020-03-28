@@ -10,6 +10,15 @@ module.exports = {
 };
 
 async function registerUSer({ email, name, lastName, password }) {
+  const wasEmailFound = (await findUserByEmail(email)) !== null;
+  if (wasEmailFound) {
+    return {
+      auth: false,
+      token: null,
+      status: 409,
+      message: `${email} is already register`
+    };
+  }
   const hashedPassword = bcrypt.hashSync(password, 8);
 
   try {

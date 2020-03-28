@@ -12,7 +12,9 @@ async function postUser(req, res) {
 
   try {
     const response = await registerUSer({ name, email, lastName, password });
-
+    if (response.status === 409) {
+      return res.status(409).send({ message: response.message });
+    }
     return res.status(201).send({ ...response });
   } catch (error) {
     return res.status(500).send(error);
