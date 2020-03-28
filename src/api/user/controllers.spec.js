@@ -29,7 +29,7 @@ describe("Controler /api/user Post Request", () => {
       .request(server)
       .post("/api/user")
       .send({
-        email: "me@sejuegafutbol.com",
+        email: "otherme@sejuegafutbol.com",
         name: "Manuel",
         lastName: "Castro",
         password: "123",
@@ -50,6 +50,31 @@ describe("Controler /api/user Post Request", () => {
       });
     expect(response.body).to.have.property("auth");
     expect(response.body).to.have.property("token");
+  });
+  it("return a 409 stasus code when the email already exits", async () => {
+    const response = await chai
+      .request(server)
+      .post("/api/user")
+      .send({
+        email: "me@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123",
+        confirmPassword: "123"
+      });
+    expect(response.body).to.have.property("auth");
+    expect(response.body).to.have.property("token");
+    const secondResponse = await chai
+      .request(server)
+      .post("/api/user")
+      .send({
+        email: "me@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123",
+        confirmPassword: "123"
+      });
+    expect(secondResponse).to.have.status(409);
   });
 });
 
