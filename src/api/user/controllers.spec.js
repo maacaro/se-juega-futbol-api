@@ -73,7 +73,7 @@ describe("Controller POST REQUEST /api/login", () => {
 
     expect(status).to.equal(404);
   });
-  it("response 'User Not Found' when the user doesn't exits", async () => {
+  it("response 'NOT_REGISTER' when the user doesn't exits", async () => {
     const {
       body: { message }
     } = await chai
@@ -84,7 +84,7 @@ describe("Controller POST REQUEST /api/login", () => {
         password: "123"
       });
 
-    expect(message).to.equal("User Not Found");
+    expect(message).to.equal("NOT_REGISTER");
   });
   it("response 401 when the user and password combination is not valid'", async () => {
     const responseRegisterUser = await chai
