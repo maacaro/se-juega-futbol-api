@@ -51,7 +51,7 @@ describe("Service registerUser", () => {
     expect(response.token).to.equal(expectedToken);
   });
 });
-describe("SERVICE Login", () => {
+describe("Service Login", () => {
   beforeEach(async function() {
     try {
       await pool.query("TRUNCATE TABLE users CASCADE");
@@ -69,7 +69,7 @@ describe("SERVICE Login", () => {
     expect(JSON.stringify(serviceResponse)).to.equal(
       JSON.stringify({
         status: 404,
-        message: "User Not Found"
+        message: "NOT_REGISTER"
       })
     );
   });
@@ -86,7 +86,12 @@ describe("SERVICE Login", () => {
 
     const loginResponse = await login({ email, password });
     expect(JSON.stringify(loginResponse)).to.equal(
-      JSON.stringify({ auth: false, token: null })
+      JSON.stringify({
+        status: 401,
+        message: "WRONG_PASSWORD_EMAIL_COMBINATION",
+        auth: false,
+        token: null
+      })
     );
   });
   it("faild auth with no valid email passsword combination", async () => {
@@ -110,7 +115,12 @@ describe("SERVICE Login", () => {
 
     const loginResponse = await login({ email, password });
     expect(JSON.stringify(loginResponse)).to.equal(
-      JSON.stringify({ auth: false, token: null })
+      JSON.stringify({
+        status: 401,
+        message: "WRONG_PASSWORD_EMAIL_COMBINATION",
+        auth: false,
+        token: null
+      })
     );
   });
   it("return a valid token a trully auth flag ", async () => {
@@ -126,6 +136,11 @@ describe("SERVICE Login", () => {
 
     const loginResponse = await login({ email, password });
     const token = jwt.sign({ id: 1 }, secret, { expiresIn: 86400 });
-    expect(loginResponse).to.deep.equal({ auth: true, token });
+    expect(loginResponse).to.deep.equal({
+      status: 200,
+      message: "SUCCESS_SIGN_IN",
+      auth: true,
+      token
+    });
   });
 });
