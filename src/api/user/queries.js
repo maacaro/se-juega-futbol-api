@@ -3,7 +3,8 @@ const { connectionString } = require("../../config");
 
 module.exports = {
   createUser,
-  findUserByEmail
+  findUserByEmail,
+  createLocation
 };
 
 const pool = new Pool({
@@ -50,4 +51,20 @@ function findUserByEmail(email) {
       };
     })
     .catch(error => error);
+}
+
+function createLocation({ latitude, longitude, name, address = "" }) {
+  if (!!latitude === false) {
+    throw new Error("latitude should have a value");
+  }
+  if (!!longitude === false) {
+    throw new Error("longitude should have a value");
+  }
+  if (!!name === false) {
+    throw new Error("the location name should have a value");
+  }
+  return pool.query(
+    `INSERT INTO locations(latitude, longitude, location_name, address) VALUES($1,$2,$3,$4) RETURNING location_id `,
+    [latitude, longitude, name, address]
+  );
 }
