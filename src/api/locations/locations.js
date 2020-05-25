@@ -5,7 +5,8 @@ const pool = new Pool({
 });
 
 module.exports = {
-  selectLocations
+  selectLocations,
+  create
 };
 
 function selectLocations() {
@@ -15,4 +16,15 @@ function selectLocations() {
       return rows;
     })
     .catch(error => error);
+}
+
+function create({ name, latitude, longitude, address }) {
+  return pool
+    .query(
+      "INSERT INTO locations (location_name,latitude,longitude,address) VALUES($1,$2,$3,$4) RETURNING location_id",
+      [name, latitude, longitude, address]
+    )
+    .then(results => {
+      return results;
+    });
 }

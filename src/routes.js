@@ -3,12 +3,13 @@ const jwt = require("jsonwebtoken");
 const { secret } = require("./config");
 
 const { postUser, loginUser } = require("./api/user/controllers");
-const { getLocations } = require("./api/locations/controllers");
+const { getLocations, postLocations } = require("./api/locations/controllers");
 const router = express.Router();
 
 router.post("/user", postUser);
 router.post("/login", loginUser);
 router.get("/locations", verifyToken, getLocations);
+router.post("/locations", verifyToken, postLocations);
 
 async function verifyToken(req, res, next) {
   const token = req.headers["x-access-token"];

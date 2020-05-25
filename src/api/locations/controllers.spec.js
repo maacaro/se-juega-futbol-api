@@ -12,7 +12,7 @@ const pool = new Pool({
 });
 
 chai.use(chaiHttp);
-describe("Controler /api/location Get", () => {
+describe("GET /api/locations", () => {
   afterEach(async function() {
     try {
       await pool.query("TRUNCATE TABLE users CASCADE");
@@ -70,7 +70,132 @@ describe("Controler /api/location Get", () => {
     expect(response).to.have.status(200);
     expect(body).to.deep.equal({ locations: [] });
   });
-  // it("response 400 Bad request when the latitude is missing", () => {});
-  // it("response 400 Bad request when the longitude is missing", () => {});
-  // it("response 201 when the location was successfull inserted", () => {});
+});
+describe("POST /api/locations", () => {
+  afterEach(async function() {
+    try {
+      await pool.query("TRUNCATE TABLE users CASCADE");
+      await pool.query("ALTER SEQUENCE users_user_id_seq RESTART WITH 1");
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  it("response 400 Bad request when the name is missing", async () => {
+    const {
+      body: { token }
+    } = await chai
+      .request(server)
+      .post("/api/user")
+      .send({
+        email: "me@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123",
+        confirmPassword: "123"
+      });
+    const response = await chai
+      .request(server)
+      .post("/api/locations")
+      .set("x-access-token", token)
+      .send({
+        latitude: 5,
+        longitude: 6
+      });
+    expect(response).to.have.status(400);
+  });
+  it("response 400 Bad request when the latitude is missing", async () => {
+    const {
+      body: { token }
+    } = await chai
+      .request(server)
+      .post("/api/user")
+      .send({
+        email: "me@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123",
+        confirmPassword: "123"
+      });
+    const response = await chai
+      .request(server)
+      .post("/api/locations")
+      .set("x-access-token", token)
+      .send({
+        name: "UCAT",
+        longitude: 6
+      });
+    expect(response).to.have.status(400);
+  });
+  it("response 400 Bad request when the longitude is missing", async () => {
+    const {
+      body: { token }
+    } = await chai
+      .request(server)
+      .post("/api/user")
+      .send({
+        email: "me@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123",
+        confirmPassword: "123"
+      });
+    const response = await chai
+      .request(server)
+      .post("/api/locations")
+      .set("x-access-token", token)
+      .send({
+        name: "UCAT",
+        latitude: 6
+      });
+    expect(response).to.have.status(400);
+  });
+  it("response 400 Bad request when the address is missing", async () => {
+    const {
+      body: { token }
+    } = await chai
+      .request(server)
+      .post("/api/user")
+      .send({
+        email: "me@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123",
+        confirmPassword: "123"
+      });
+    const response = await chai
+      .request(server)
+      .post("/api/locations")
+      .set("x-access-token", token)
+      .send({
+        name: "UCAT",
+        latitude: 6,
+        longitude: 4
+      });
+    expect(response).to.have.status(400);
+  });
+  it("response 201 when the location was successfull inserted", async () => {
+    const {
+      body: { token }
+    } = await chai
+      .request(server)
+      .post("/api/user")
+      .send({
+        email: "me@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123",
+        confirmPassword: "123"
+      });
+    const response = await chai
+      .request(server)
+      .post("/api/locations")
+      .set("x-access-token", token)
+      .send({
+        name: "UCAT",
+        latitude: 6,
+        longitude: 4,
+        address: "foo"
+      });
+    expect(response).to.have.status(201);
+  });
 });
