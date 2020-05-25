@@ -14,7 +14,7 @@ const pool = new Pool({
 
 chai.use(chaiHttp);
 
-describe("Controler /api/user Post Request", () => {
+describe("POST /api/user", () => {
   afterEach(async function() {
     try {
       await pool.query("TRUNCATE TABLE users CASCADE");
@@ -78,7 +78,7 @@ describe("Controler /api/user Post Request", () => {
   });
 });
 
-describe("Controller POST REQUEST /api/login", () => {
+describe("POST /api/login", () => {
   afterEach(async function() {
     try {
       await pool.query("TRUNCATE TABLE users CASCADE");
@@ -183,3 +183,5 @@ describe("Controller POST REQUEST /api/login", () => {
     expect(token).to.not.equal(null);
   });
 });
+
+describe("GET /api/players");
