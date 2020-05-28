@@ -183,5 +183,3 @@ describe("POST /api/login", () => {
     expect(token).to.not.equal(null);
   });
 });
-
-describe("GET /api/players");
