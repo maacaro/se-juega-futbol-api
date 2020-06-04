@@ -4,6 +4,7 @@ const { secret } = require("./config");
 
 const { postUser, loginUser } = require("./api/user/controllers");
 const { getLocations, postLocations } = require("./api/locations/controllers");
+const { getMatches, postMatches } = require("./api/matches/controller");
 const { getPlayers } = require("./api/players/controller");
 const router = express.Router();
 
@@ -11,6 +12,8 @@ router.post("/user", postUser);
 router.post("/login", loginUser);
 router.get("/locations", verifyToken, getLocations);
 router.post("/locations", verifyToken, postLocations);
+router.get("/matches", verifyToken, getMatches);
+router.post("/matches", verifyToken, postMatches);
 router.get("/players", verifyToken, getPlayers);
 
 async function verifyToken(req, res, next) {
