@@ -6,7 +6,7 @@ module.exports = {
   getMatches,
   postMatches
 };
-async function getMatches(rwq, res) {
+async function getMatches(req, res) {
   return null;
 }
 async function postMatches(req, res) {
@@ -60,8 +60,25 @@ async function postMatches(req, res) {
     });
   }
 
-  // try{
-  //   await create({matchName, matchDate, matchTime, players, location})
-  // }
-  // return null;
+  try {
+    const result = await create({
+      matchName,
+      matchDate,
+      matchTime,
+      players,
+      location
+    });
+    const match = result.reduce(
+      (acum, { rows }) => ({
+        ...acum,
+        matchId: rows[0]["match_id"],
+        players: [...acum["players"], { playerId: rows[0]["player_id"] }]
+      }),
+      { matchId: null, players: [] }
+    );
+    return res.status(201).send({ match });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ message: "error creating the match" });
+  }
 }

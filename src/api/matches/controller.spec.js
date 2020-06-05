@@ -301,31 +301,31 @@ describe("POST /api/matches", () => {
       });
     expect(response).to.have.status(400);
   });
-  // it("response with 201", async () => {
-  //   const {
-  //     body: { token }
-  //   } = await chai
-  //     .request(server)
-  //     .post("/api/login")
-  //     .send({
-  //       email: "manuel@sejuegafutbol.com",
-  //       name: "Manuel",
-  //       lastName: "Castro",
-  //       password: "123"
-  //     });
-  //   const response = await chai
-  //     .request(server)
-  //     .post("/api/mathes")
-  //     .set("x-access-token", token)
-  //     .send({
-  //       matchName: "fist match",
-  //       matchDate: "2020-06-23",
-  //       matchTime: "16:00:00",
-  //       players: [1, 2, 3],
-  //       location: 1
-  //     });
-  //   expect(response).to.have.status(201);
-  // });
+  it("response with 201", async () => {
+    const {
+      body: { token }
+    } = await chai
+      .request(server)
+      .post("/api/login")
+      .send({
+        email: "manuel@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123"
+      });
+    const response = await chai
+      .request(server)
+      .post("/api/matches")
+      .set("x-access-token", token)
+      .send({
+        matchName: "fist match",
+        matchDate: "2020-06-23",
+        matchTime: "16:00:00",
+        players: [1, 2, 3],
+        location: 1
+      });
+    expect(response).to.have.status(201);
+  });
 });
 
 describe("GET /api/matches", () => {
