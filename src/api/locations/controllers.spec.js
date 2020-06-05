@@ -72,10 +72,26 @@ describe("GET /api/locations", () => {
   });
 });
 describe("POST /api/locations", () => {
-  afterEach(async function() {
+  before(async () => {
+    await chai
+      .request(server)
+      .post("/api/user")
+      .send({
+        email: "manuel@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123",
+        confirmPassword: "123"
+      });
+  });
+  after(async function() {
     try {
       await pool.query("TRUNCATE TABLE users CASCADE");
+      await pool.query("TRUNCATE TABLE locations CASCADE");
       await pool.query("ALTER SEQUENCE users_user_id_seq RESTART WITH 1");
+      await pool.query(
+        "ALTER SEQUENCE locations_location_id_seq RESTART WITH 1"
+      );
     } catch (error) {
       console.log(error);
     }
@@ -85,13 +101,12 @@ describe("POST /api/locations", () => {
       body: { token }
     } = await chai
       .request(server)
-      .post("/api/user")
+      .post("/api/login")
       .send({
-        email: "me@sejuegafutbol.com",
+        email: "manuel@sejuegafutbol.com",
         name: "Manuel",
         lastName: "Castro",
-        password: "123",
-        confirmPassword: "123"
+        password: "123"
       });
     const response = await chai
       .request(server)
@@ -108,13 +123,12 @@ describe("POST /api/locations", () => {
       body: { token }
     } = await chai
       .request(server)
-      .post("/api/user")
+      .post("/api/login")
       .send({
-        email: "me@sejuegafutbol.com",
+        email: "manuel@sejuegafutbol.com",
         name: "Manuel",
         lastName: "Castro",
-        password: "123",
-        confirmPassword: "123"
+        password: "123"
       });
     const response = await chai
       .request(server)
@@ -131,13 +145,12 @@ describe("POST /api/locations", () => {
       body: { token }
     } = await chai
       .request(server)
-      .post("/api/user")
+      .post("/api/login")
       .send({
-        email: "me@sejuegafutbol.com",
+        email: "manuel@sejuegafutbol.com",
         name: "Manuel",
         lastName: "Castro",
-        password: "123",
-        confirmPassword: "123"
+        password: "123"
       });
     const response = await chai
       .request(server)
@@ -154,13 +167,12 @@ describe("POST /api/locations", () => {
       body: { token }
     } = await chai
       .request(server)
-      .post("/api/user")
+      .post("/api/login")
       .send({
-        email: "me@sejuegafutbol.com",
+        email: "manuel@sejuegafutbol.com",
         name: "Manuel",
         lastName: "Castro",
-        password: "123",
-        confirmPassword: "123"
+        password: "123"
       });
     const response = await chai
       .request(server)
@@ -178,13 +190,12 @@ describe("POST /api/locations", () => {
       body: { token }
     } = await chai
       .request(server)
-      .post("/api/user")
+      .post("/api/login")
       .send({
-        email: "me@sejuegafutbol.com",
+        email: "manuel@sejuegafutbol.com",
         name: "Manuel",
         lastName: "Castro",
-        password: "123",
-        confirmPassword: "123"
+        password: "123"
       });
     const response = await chai
       .request(server)

@@ -5,6 +5,7 @@ const pool = new Pool({
 });
 
 module.exports = {
+  getLocationById,
   selectLocations,
   create
 };
@@ -27,4 +28,13 @@ function create({ name, latitude, longitude, address }) {
     .then(results => {
       return results;
     });
+}
+
+function getLocationById(id) {
+  return pool
+    .query(`SELECT * FROM locations WHERE location_id=${id}`)
+    .then(({ rows }) => {
+      return rows;
+    })
+    .catch(error => error);
 }
