@@ -53,7 +53,8 @@ async function login({ email, password }) {
       status: 401,
       message: "WRONG_PASSWORD_EMAIL_COMBINATION",
       auth: false,
-      token: null
+      token: null,
+      playerId: null
     };
   }
 
@@ -61,5 +62,11 @@ async function login({ email, password }) {
     expiresIn: 86400
   });
 
-  return { status: 200, message: "SUCCESS_SIGN_IN", auth: true, token };
+  return {
+    status: 200,
+    message: "SUCCESS_SIGN_IN",
+    auth: true,
+    token,
+    playerId: userID
+  };
 }

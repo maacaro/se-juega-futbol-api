@@ -182,4 +182,30 @@ describe("POST /api/login", () => {
     expect(responseRegisterUser).to.have.status(201);
     expect(token).to.not.equal(null);
   });
+  it("response with a playerId", async () => {
+    const responseRegisterUser = await chai
+      .request(server)
+      .post("/api/user")
+      .send({
+        email: "me@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123",
+        confirmPassword: "123"
+      });
+    const reponseLogin = await chai
+      .request(server)
+      .post("/api/login")
+      .send({
+        email: "me@sejuegafutbol.com",
+        password: "123"
+      });
+    const {
+      body: { playerId }
+    } = reponseLogin;
+
+    expect(responseRegisterUser).to.have.status(201);
+    expect(reponseLogin).to.have.status(200);
+    expect(playerId).to.not.equal(null);
+  });
 });
