@@ -90,7 +90,8 @@ describe("Service Login", () => {
         status: 401,
         message: "WRONG_PASSWORD_EMAIL_COMBINATION",
         auth: false,
-        token: null
+        token: null,
+        playerId: null
       })
     );
   });
@@ -119,11 +120,12 @@ describe("Service Login", () => {
         status: 401,
         message: "WRONG_PASSWORD_EMAIL_COMBINATION",
         auth: false,
-        token: null
+        token: null,
+        playerId: null
       })
     );
   });
-  it("return a valid token a trully auth flag ", async () => {
+  it("return a valid token a trully auth flag and playerId", async () => {
     const email = "me@sejuegafutbol.com";
     const password = "123";
     await registerUSer({
@@ -140,7 +142,8 @@ describe("Service Login", () => {
       status: 200,
       message: "SUCCESS_SIGN_IN",
       auth: true,
-      token
+      token,
+      playerId: 1
     });
   });
 });
