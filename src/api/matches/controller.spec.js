@@ -405,4 +405,28 @@ describe("GET /api/matches", () => {
     expect(body[0]).to.have.property("title");
     expect(body[0]["title"]).to.equal("fist match");
   });
+  it("response with players and location by match", async () => {
+    const {
+      body: { token, playerId }
+    } = await chai
+      .request(server)
+      .post("/api/login")
+      .send({
+        email: "manuel@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123"
+      });
+    const { body } = await chai
+      .request(server)
+      .get(`/api/matches/?playerId=${playerId}&embed=players,location`)
+      .set("x-access-token", token);
+    expect(body.length).to.equal(1);
+    expect(body[0]).to.have.property("players");
+    expect(body[0]["players"]).to.deep.equal([
+      { name: "Manuel", lastName: "Castro" },
+      { name: "Heberth", lastName: "Strube" },
+      { name: "Javier", lastName: "Malpica" }
+    ]);
+  });
 });
