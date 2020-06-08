@@ -58,18 +58,6 @@ describe("POST /api/matches", () => {
         address: "foo"
       });
   });
-  after(async function() {
-    try {
-      await pool.query("TRUNCATE TABLE users CASCADE");
-      await pool.query("TRUNCATE TABLE locations CASCADE");
-      await pool.query("ALTER SEQUENCE users_user_id_seq RESTART WITH 1");
-      await pool.query(
-        "ALTER SEQUENCE locations_location_id_seq RESTART WITH 1"
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  });
   it("response with 401 when is no token", async () => {
     const response = await chai
       .request(server)
@@ -329,18 +317,6 @@ describe("POST /api/matches", () => {
 });
 
 describe("GET /api/matches", () => {
-  before(async () => {
-    await chai
-      .request(server)
-      .post("/api/user")
-      .send({
-        email: "manuel@sejuegafutbol.com",
-        name: "Manuel",
-        lastName: "Castro",
-        password: "123",
-        confirmPassword: "123"
-      });
-  });
   after(async function() {
     try {
       await pool.query("TRUNCATE TABLE matches CASCADE");
@@ -378,5 +354,55 @@ describe("GET /api/matches", () => {
       .set("x-access-token", "foo");
 
     expect(message).to.equal("Failed to authenticate token.");
+  });
+  it("response with the list of all the matches", async () => {
+    const {
+      body: { token, playerId }
+    } = await chai
+      .request(server)
+      .post("/api/login")
+      .send({
+        email: "manuel@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123"
+      });
+    await chai
+      .request(server)
+      .post("/api/matches")
+      .set("x-access-token", token)
+      .send({
+        matchName: "second match",
+        matchDate: "2020-06-23",
+        matchTime: "16:00:00",
+        players: [2, 3],
+        location: 1
+      });
+    const { body } = await chai
+      .request(server)
+      .get("/api/matches")
+      .set("x-access-token", token);
+
+    expect(body.length).to.equal(2);
+  });
+  it("response with the list of the matches where the player with id 1 ", async () => {
+    const {
+      body: { token, playerId }
+    } = await chai
+      .request(server)
+      .post("/api/login")
+      .send({
+        email: "manuel@sejuegafutbol.com",
+        name: "Manuel",
+        lastName: "Castro",
+        password: "123"
+      });
+    const { body } = await chai
+      .request(server)
+      .get(`/api/matches/?playerId=${playerId}`)
+      .set("x-access-token", token);
+    expect(body.length).to.equal(1);
+    expect(body[0]).to.have.property("title");
+    expect(body[0]["title"]).to.equal("fist match");
   });
 });

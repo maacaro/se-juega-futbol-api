@@ -5,7 +5,8 @@ const pool = new Pool({
 });
 
 module.exports = {
-  create
+  create,
+  select
 };
 
 function create({ matchName = null, matchDate, matchTime, players, location }) {
@@ -25,4 +26,15 @@ function create({ matchName = null, matchDate, matchTime, players, location }) {
         )
       );
     });
+}
+
+function select({ playerId }) {
+  if (playerId) {
+    return pool
+      .query(
+        `SELECT * FROM matches JOIN players_matches ON matches.match_id=players_matches.match_id WHERE players_matches.player_id =${playerId}`
+      )
+      .then(({ rows }) => rows);
+  }
+  return pool.query("SELECT * FROM matches").then(({ rows }) => rows);
 }
