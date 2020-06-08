@@ -1,4 +1,4 @@
-const { create } = require("./matches");
+const { create, select } = require("./matches");
 const { getLocationById } = require("../locations/locations");
 const { getPlayerById } = require("../players/players");
 
@@ -7,7 +7,18 @@ module.exports = {
   postMatches
 };
 async function getMatches(req, res) {
-  return null;
+  const playerId = req.query.playerId;
+  const result = await select({ playerId });
+  const matches = result.map(
+    ({ match_id, name_matches, match_date, match_time, location_id }) => ({
+      id: match_id,
+      title: name_matches,
+      date: match_date,
+      time: match_time,
+      locationId: location_id
+    })
+  );
+  return res.status(200).send(matches);
 }
 async function postMatches(req, res) {
   const {
