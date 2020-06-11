@@ -405,7 +405,7 @@ describe("GET /api/matches", () => {
     expect(body[0]).to.have.property("title");
     expect(body[0]["title"]).to.equal("fist match");
   });
-  it("response with players and location by match", async () => {
+  it("embed players and location into the response", async () => {
     const {
       body: { token, playerId }
     } = await chai
@@ -428,5 +428,13 @@ describe("GET /api/matches", () => {
       { name: "Heberth", lastName: "Strube" },
       { name: "Javier", lastName: "Malpica" }
     ]);
+    expect(body[0]).to.have.property("location");
+    expect(body[0]["location"]).to.deep.equal({
+      id: 1,
+      name: "UCAT",
+      latitude: 6,
+      longitude: 4,
+      address: "foo"
+    });
   });
 });
