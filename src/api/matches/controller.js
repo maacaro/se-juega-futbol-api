@@ -8,16 +8,8 @@ module.exports = {
 };
 async function getMatches(req, res) {
   const playerId = req.query.playerId;
-  const result = await select({ playerId });
-  const matches = result.map(
-    ({ match_id, name_matches, match_date, match_time, location_id }) => ({
-      id: match_id,
-      title: name_matches,
-      date: match_date,
-      time: match_time,
-      locationId: location_id
-    })
-  );
+  const embed = req.query.embed || null;
+  const matches = await select({ playerId, embed });
   return res.status(200).send(matches);
 }
 async function postMatches(req, res) {
